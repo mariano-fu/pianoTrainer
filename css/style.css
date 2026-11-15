@@ -30,3 +30,7 @@
 .pressed {
     background-color: #E8431A;
 }
+
+.hidden {
+    display: none;
+}

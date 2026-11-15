@@ -121,3 +121,45 @@ document.addEventListener("mouseup", () => {
     mousePitch = null;
 });
 
+// adds a "start" beat to every note: when it begins, counted from the song's start.
+function withStartBeats(notes) {
+  let beat = 0;
+  return notes.map((note) => {
+    const timed = { ...note, start: beat };
+    beat += note.beats;
+    return timed;
+  });
+}
+
+// shows only active screen with given id, hides the other two
+function showScreen(id) {
+    document.querySelectorAll(".screen").forEach((screen) => {
+        if (screen.id === id) {
+            screen.classList.remove("hidden");
+        } else {
+            screen.classList.add("hidden")
+        }
+    });
+}
+
+//builds one menu entry: a list item holding a button for the song
+function createSongItem(song) {
+    const item = document.createElement("li")
+    const button = document.createElement("button");
+    button.type = "button";
+    button.dataset.songId = song.id;
+    button.textContent = `${song.title} (${song.composer})`;
+    item.append(button);
+    return item;
+}
+
+//adds one entry per song in SONGS to the menu
+function renderMenu() {
+    const list = document.querySelector("#song-list");
+    SONGS.forEach((song) => {
+        list.append(createSongItem(song));
+    });
+}
+
+renderMenu();
+showScreen("menu-screen");

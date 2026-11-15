@@ -5,7 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Piano Hero</title>
     <link rel="stylesheet" href="css/style.css">
-    <script src="js/main.js" defer></script>
+    <script src="js/songs.js" defer></script>
+    <script src="js/main.js" defer></script>  
 </head>
 
 <body>
@@ -14,13 +15,13 @@
     </header>
 
     <main>
-        <section id="menu-screen">
+        <section id="menu-screen" class="screen">
             <button type="button" id="free-play">Free Play</button>
             <h2>Song List</h2>
             <ul id="song-list">
             </ul>
         </section>
-        <section id="in-game-screen">
+        <section id="in-game-screen" class="screen">
             <div id="hud">
                 <div id="song-title"></div>
                 <div id="progress"></div>
@@ -30,7 +31,7 @@
             <div id="lane"></div>
             <div id="keyboard"></div>
         </section>
-        <section id="results-screen">
+        <section id="results-screen" class="screen">
             <h2 id="results-heading"></h2>
             <div id="final-stats"></div>
             <button type="button" id="play-again">Play again</button>
