@@ -30,3 +30,15 @@ function createKey(code, pitch) {
 
   return key;
 }
+
+function renderKeyboard() {
+   const keyboard = document.querySelector('#keyboard')
+   const entries = Object.entries(KEY_TO_PITCH)
+   entries.forEach(([code,pitch]) => {
+    const key = createKey(code,pitch)
+    keyboard.append(key)
+   });
+
+}
+
+renderKeyboard()
