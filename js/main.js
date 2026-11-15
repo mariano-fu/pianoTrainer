@@ -161,5 +161,46 @@ function renderMenu() {
     });
 }
 
+//one listener for the whole list (event delegation)
+document.querySelector("#song-list").addEventListener("click", (event) => {
+    const songId = event.target.dataset.songId;
+    if (!songId) return;
+    const song = SONGS.find((candidate) => candidate.id === songId);
+    startSong(song);
+});
+
+// current game state
+const state = {
+    mode: "menu", // menu, song or free
+    song: null, // current song
+};
+
+function startsong(song) {
+    state.mode = "song";
+    state.song = {...song, notes: withStartsBeats(song.notes) };
+    document.querySelector("#song-title").textContent = song.title;
+    document.querySelector("#lane").classList.remove("hidden");
+    showScreen("in-game-screen");
+}
+
+function startFreePlay() {
+    state.mode = "free";
+    state.song = null;
+    document.querySelector("#song-title").textContent = "Free Play";
+    document.querySelector("#lane").classList.add("hidden");
+    showScreen("in-game-screen")
+}
+
+document.querySelector("#free-play").addEventListener("click", startFreePlay);
+
+function backToMenu() {
+    state.mode = "menu"
+    state.song = null;
+    showScreen("menu-screen");
+}
+
+document.querySelector("#back-to-menu-button").addEventListener("click", backToMenu);
+document.querySelector("#back-to-menu-button-results").addEventListener("click", backToMenu);
+
 renderMenu();
 showScreen("menu-screen");
