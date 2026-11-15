@@ -1,0 +1,32 @@
+// event.code is the PHYSICAL key, so this works on any layout
+// (on a Spanish keyboard, the Ñ key still reports "Semicolon").
+const KEY_TO_PITCH = {
+  KeyA: "C4", KeyW: "C#4", KeyS: "D4", KeyE: "D#4", KeyD: "E4",
+  KeyF: "F4", KeyT: "F#4", KeyG: "G4", KeyY: "G#4", KeyH: "A4",
+  KeyU: "A#4", KeyJ: "B4", KeyK: "C5", KeyO: "C#5", KeyL: "D5",
+  KeyP: "D#5", Semicolon: "E5",
+};
+
+function labelFor(code) {
+  if (code === "Semicolon") {
+    return ";";
+  }
+  return code.replace("Key", "");
+}
+
+function createKey(code, pitch) {
+  const key = document.createElement("button");
+  key.type = "button";
+
+  key.classList.add("key");
+  if (pitch.includes("#")) {
+    key.classList.add("black");
+  } else {
+    key.classList.add("white");
+  }
+
+  key.dataset.pitch = pitch;
+  key.textContent = labelFor(code);
+
+  return key;
+}
