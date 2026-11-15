@@ -44,3 +44,32 @@ function renderKeyboard() {
 }
 
 renderKeyboard()
+
+// find a key from its pitch
+function findKey(pitch) {
+    return document.querySelector(`[data-pitch="${pitch}"]`);
+}
+
+//press and release
+function pressKey(pitch) {
+    findKey(pitch).classList.add("pressed");
+}
+
+function releaseKey(pitch) {
+    findKey(pitch).classList.remove("pressed");
+}
+
+//keyboard input
+document.addEventListener("keydown", (event) => {
+    if (event.repeat) return ;
+    const pitch = KEY_TO_PITCH[event.code];
+    if (!pitch) return;
+    pressKey(pitch);
+
+});
+
+document.addEventListener("keyup", (event) => {
+    const pitch = KEY_TO_PITCH[event.code];
+    if (pitch) releaseKey(pitch);
+});
+

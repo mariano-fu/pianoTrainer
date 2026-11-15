@@ -1,7 +1,11 @@
 #keyboard {
     display: flex;
+}
 
-
+.key {
+    display: flex;
+    justify-content: center;
+    align-items: end;
 }
 
 .white {
@@ -20,4 +24,9 @@
     height: 55px;
     background-color: black;
     color: white;
+    border: 1px solid black;
+}
+
+.pressed {
+    background-color: #E8431A;
 }
