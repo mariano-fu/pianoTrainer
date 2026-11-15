@@ -45,6 +45,7 @@ function renderKeyboard() {
 
 renderKeyboard()
 
+
 // find a key from its pitch
 function findKey(pitch) {
     return document.querySelector(`[data-pitch="${pitch}"]`);
@@ -73,3 +74,20 @@ document.addEventListener("keyup", (event) => {
     if (pitch) releaseKey(pitch);
 });
 
+
+//mouse input
+const keyboard = document.querySelector("#keyboard")
+    let mousePitch = null;
+
+keyboard.addEventListener("mousedown", (event) => {
+    const pitch = event.target.dataset.pitch;
+    if (!pitch) return;
+    mousePitch = pitch;
+    pressKey(pitch);
+});
+
+document.addEventListener("mouseup", () => {
+    if (mousePitch === null) return;
+    releaseKey(mousePitch);
+    mousePitch = null;
+});
