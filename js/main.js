@@ -1,45 +1,46 @@
 // event.code is the PHYSICAL key, so this works on any layout
 // (on a Spanish keyboard, the Ñ key still reports "Semicolon").
 const KEY_TO_PITCH = {
-  KeyA: "C4", KeyW: "C#4", KeyS: "D4", KeyE: "D#4", KeyD: "E4",
-  KeyF: "F4", KeyT: "F#4", KeyG: "G4", KeyY: "G#4", KeyH: "A4",
-  KeyU: "A#4", KeyJ: "B4", KeyK: "C5", KeyO: "C#5", KeyL: "D5",
-  KeyP: "D#5", Semicolon: "E5",
+    KeyA: "C4", KeyW: "C#4", KeyS: "D4", KeyE: "D#4", KeyD: "E4",
+    KeyF: "F4", KeyT: "F#4", KeyG: "G4", KeyY: "G#4", KeyH: "A4",
+    KeyU: "A#4", KeyJ: "B4", KeyK: "C5", KeyO: "C#5", KeyL: "D5",
+    KeyP: "D#5", Semicolon: "E5",
 };
 
+//turns a key code into the letter shown on the piano key
 function labelFor(code) {
-  if (code === "Semicolon") {
-    return ";";
-  }
-  return code.replace("Key", "");
+    if (code === "Semicolon") {
+        return ";";
+    }
+    return code.replace("Key", "");
 }
 
 // key map and createKey function
 function createKey(code, pitch) {
-  const key = document.createElement("button");
-  key.type = "button";
+    const key = document.createElement("button");
+    key.type = "button";
 
-  key.classList.add("key");
-  if (pitch.includes("#")) {
-    key.classList.add("black");
-  } else {
-    key.classList.add("white");
-  }
+    key.classList.add("key");
+    if (pitch.includes("#")) {
+        key.classList.add("black");
+    } else {
+        key.classList.add("white");
+    }
 
-  key.dataset.pitch = pitch;
-  key.textContent = labelFor(code);
+    key.dataset.pitch = pitch;
+    key.textContent = labelFor(code);
 
-  return key;
+    return key;
 }
 
 // piano keys render from key map
 function renderKeyboard() {
-   const keyboard = document.querySelector('#keyboard')
-   const entries = Object.entries(KEY_TO_PITCH)
-   entries.forEach(([code,pitch]) => {
-    const key = createKey(code,pitch)
-    keyboard.append(key)
-   });
+    const keyboard = document.querySelector('#keyboard')
+    const entries = Object.entries(KEY_TO_PITCH)
+    entries.forEach(([code, pitch]) => {
+        const key = createKey(code, pitch)
+        keyboard.append(key)
+    });
 
 }
 
@@ -51,8 +52,36 @@ function findKey(pitch) {
     return document.querySelector(`[data-pitch="${pitch}"]`);
 }
 
+
+//sound
+
+//the browser's sound engine, this stays silent until the user interacts
+const audio = new AudioContext();
+const NAMES = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"];
+
+
+//converts a pitch name to it's midi number 
+function midiOf(pitch) {                 // "C#4" -> 61
+    const octave = Number(pitch.slice(-1));
+    return (octave + 1) * 12 + NAMES.indexOf(pitch.slice(0, -1));
+}
+
+function playTone(pitch) {
+    const osc = audio.createOscillator();
+    const gain = audio.createGain();
+    osc.type = "triangle";
+    osc.frequency.value = 440 * 2 ** ((midiOf(pitch) - 69) / 12);
+    gain.gain.setValueAtTime(0.3, audio.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, audio.currentTime + 1); // fade out
+    osc.connect(gain).connect(audio.destination);
+    osc.start();
+    osc.stop(audio.currentTime + 1);
+}
+
 //press and release
 function pressKey(pitch) {
+    audio.resume();
+    playTone(pitch)
     findKey(pitch).classList.add("pressed");
 }
 
@@ -62,7 +91,7 @@ function releaseKey(pitch) {
 
 //keyboard input
 document.addEventListener("keydown", (event) => {
-    if (event.repeat) return ;
+    if (event.repeat) return;
     const pitch = KEY_TO_PITCH[event.code];
     if (!pitch) return;
     pressKey(pitch);
@@ -77,7 +106,7 @@ document.addEventListener("keyup", (event) => {
 
 //mouse input
 const keyboard = document.querySelector("#keyboard")
-    let mousePitch = null;
+let mousePitch = null;
 
 keyboard.addEventListener("mousedown", (event) => {
     const pitch = event.target.dataset.pitch;
@@ -91,3 +120,4 @@ document.addEventListener("mouseup", () => {
     releaseKey(mousePitch);
     mousePitch = null;
 });
+
