@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Piano Hero</title>
+    <link rel="stylesheet" href="css/style.css">
+    <script src="js/main.js" defer></script>
+</head>
+
+<body>
+    <header>
+        <h1>Piano Hero</h1>
+    </header>
+
+    <main>
+        <section id="menu-screen">
+            <button type="button" id="free-play">Free Play</button>
+            <h2>Song List</h2>
+            <ul id="song-list">
+            </ul>
+        </section>
+        <section id="in-game-screen">
+            <div id="hud">
+                <div id="song-title"></div>
+                <div id="progress"></div>
+                <div id="misses"></div>
+                <button type="button" id="back-to-menu-button">Back to menu</button>
+            </div>
+            <div id="lane"></div>
+            <div id="keyboard"></div>
+        </section>
+        <section id="results-screen">
+            <h2 id="results-heading"></h2>
+            <div id="final-stats"></div>
+            <button type="button" id="play-again">Play again</button>
+            <button type="button" id="back-to-menu-button-results">Back to menu</button>
+        </section>
+    </main>
+</body>
+</html>
