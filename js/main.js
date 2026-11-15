@@ -14,6 +14,7 @@ function labelFor(code) {
   return code.replace("Key", "");
 }
 
+// key map and createKey function
 function createKey(code, pitch) {
   const key = document.createElement("button");
   key.type = "button";
@@ -31,6 +32,7 @@ function createKey(code, pitch) {
   return key;
 }
 
+// piano keys render from key map
 function renderKeyboard() {
    const keyboard = document.querySelector('#keyboard')
    const entries = Object.entries(KEY_TO_PITCH)
