@@ -168,11 +168,12 @@ document.querySelector("#song-list").addEventListener("click", (event) => {
     if (!songId) return;
     const song = SONGS.find((candidate) => candidate.id === songId);
     startSong(song);
+    updateHud();
 });
 
 // current game state
 const state = {
-    mode: "menu", // menu, song or free
+    mode: "menu", // menu, song, free or results
     song: null, // current song
 };
 
@@ -268,6 +269,7 @@ function startSong(song) {
     renderBlocks();
     draw();
     startLoop();
+    updateHud();
     
 }
 
@@ -275,6 +277,7 @@ function startFreePlay() {
     stopLoop();
     state.mode = "free";
     state.song = null;
+    updateHud();
     document.querySelector("#song-title").textContent = "Free Play";
     document.querySelector("#lane").classList.add("hidden");
     showScreen("in-game-screen")
@@ -300,7 +303,37 @@ function judgeKey(pitch) {
         misses++;
         findKey(pitch).classList.add("wrong");
     }
+
+    updateHud();
+    if (nextIndex === state.song.notes.length) finishSong();
 }
+
+//shows notes played and missed in the HUD, clears both outside song mode
+function updateHud() {
+    const progress = document.querySelector("#progress");
+    const missesText = document.querySelector("#misses");
+    if (state.mode !== "song") {
+        progress.textContent = "";
+        missesText.textContent = "";
+        return;
+    }
+    progress.textContent = `${nextIndex} / ${state.song.notes.length}`;
+    missesText.textContent = `Misses: ${misses}`;
+}
+
+
+// stops the loop and shows the results screen
+function finishSong () {
+    stopLoop();
+    const total = state.song.notes.length;
+    document.querySelector("#results-heading").textContent = `${state.song.title}: complete`;
+    document.querySelector("#final-stats").textContent = `Notes: ${total} - Misses: ${misses}`;
+    state.mode = "results";
+    showScreen("results-screen");
+}
+
+
+
 
 function backToMenu() {
     stopLoop();
@@ -311,6 +344,9 @@ function backToMenu() {
 
 document.querySelector("#back-to-menu-button").addEventListener("click", backToMenu);
 document.querySelector("#back-to-menu-button-results").addEventListener("click", backToMenu);
+document.querySelector("#play-again").addEventListener("click", () => {
+    startSong(state.song);
+});
 
 renderMenu();
 showScreen("menu-screen");
