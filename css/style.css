@@ -33,6 +33,48 @@ main {
     padding: 0 24px 24px;
 }
 
+#menu-screen,
+#results-screen {
+    max-width: 480px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+#song-list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+#song-list li {
+    margin-bottom: 12px;
+}
+
+#menu-screen button,
+#results-screen button,
+#hud button {
+    padding: 10px 16px;
+    border: 1px solid var(--muted);
+    border-radius: 6px;
+    background-color: var(--panel);
+    color: var(--text);
+    font: inherit;
+    cursor: pointer;
+}
+
+#menu-screen button:hover,
+#results-screen button:hover,
+#hud button:hover {
+    border-color: var(--accent);
+}
+
+#song-list button {
+    width: 100%;
+}
+
+#results-screen button {
+    margin: 8px 4px 0;
+}
 
 #keyboard {
     display: flex;
