@@ -76,8 +76,30 @@ main {
     margin: 8px 4px 0;
 }
 
+#in-game-screen {
+    width: calc(var(--white-w) * 10);
+    margin: 0 auto;
+}
+
+#hud {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 8px 0;
+}
+
+#hud > * {
+    margin: 0;
+}
+
+#song-title {
+    margin-right: auto;
+    font-weight: bold;
+}
+
 #keyboard {
     display: flex;
+    border-top: 4px solid var(--accent);
 }
 
 .key {
@@ -85,29 +107,37 @@ main {
     justify-content: center;
     align-items: end;
     flex-shrink: 0;
+    box-sizing: border-box;
+    padding: 0 0 8px;
+    font: inherit;
+    font-size: 0.9rem;
+    cursor: pointer;
 }
 
 .white {
-    width: 40px;
-    height: 100px;
-    border: 1px solid black;
+    width: var(--white-w);
+    height: var(--white-h);
+    border: 1px solid #222;
+    border-radius: 0 0 6px 6px;
     background-color: white;
+    color: #222;
 }
 
 .black {
     position: relative;
     z-index: 10;
-    margin-left: -12px;
-    margin-right: -12px;
-    width: 24px;
-    height: 55px;
-    background-color: black;
-    color: white;
+    width: var(--black-w);
+    height: var(--black-h);
+    margin-left: calc(var(--black-w) / -2);
+    margin-right: calc(var(--black-w) / -2);
     border: 1px solid black;
+    border-radius: 0 0 4px 4px;
+    background-color: #111;
+    color: white;
 }
 
 .pressed {
-    background-color: #E8431A;
+    background-color: var(--pressed);
 }
 
 .hidden {
@@ -116,20 +146,22 @@ main {
 
 #lane {
     position: relative;
-    height: 480px;
+    height: clamp(240px, calc(100vh - 340px), 480px);
     overflow: hidden;
+    background-color: var(--panel);
 }
 
 .note {
     position: absolute;
     top: 0;
     box-sizing: border-box;
-    border: 1px solid #222;
-    background-color: #E8431A;
+    border: 1px solid var(--panel);
+    border-radius: 4px;
+    background-color: var(--accent);
 }
 
 .wrong {
-    background-color: #B00020;
+    background-color: var(--wrong);
 }
 
 .note.hit {
