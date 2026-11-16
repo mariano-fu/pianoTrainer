@@ -83,10 +83,11 @@ function pressKey(pitch) {
     audio.resume();
     playTone(pitch)
     findKey(pitch).classList.add("pressed");
+    judgeKey(pitch)
 }
 
 function releaseKey(pitch) {
-    findKey(pitch).classList.remove("pressed");
+    findKey(pitch).classList.remove("pressed", "wrong");
 }
 
 //keyboard input
@@ -198,6 +199,8 @@ let lastTime = null;
 //id of pending frame, so it can be canceled
 let frameId = null;
 
+let misses = 0;
+
 function createBlock(note) {
     const key = findKey(note.pitch);
     const block = document.createElement("div");
@@ -252,6 +255,7 @@ function startLoop() {
     songBeat = -LEAD_IN_BEATS;
     nextIndex = 0;
     lastTime = null;
+    misses = 0;
     frameId = requestAnimationFrame(frame);
 }
 
@@ -267,8 +271,6 @@ function startSong(song) {
     
 }
 
-
-
 function startFreePlay() {
     stopLoop();
     state.mode = "free";
@@ -279,6 +281,26 @@ function startFreePlay() {
 }
 
 document.querySelector("#free-play").addEventListener("click", startFreePlay);
+
+function isWaiting() {
+    const next = state.song.notes[nextIndex];
+    return next !== undefined && songBeat >= next.start;
+}
+
+// in song mode, checks a pressed key against the note waiting at the line
+function judgeKey(pitch) {
+    if (state.mode !== "song") return;
+    if (!isWaiting()) return;
+
+    const next = state.song.notes[nextIndex];
+    if (pitch === next.pitch) {
+        blocks[nextIndex].classList.add("hit");
+        nextIndex++;
+    } else {
+        misses++;
+        findKey(pitch).classList.add("wrong");
+    }
+}
 
 function backToMenu() {
     stopLoop();

@@ -49,3 +49,11 @@
     border: 1px solid #222;
     background-color: #E8431A;
 }
+
+.wrong {
+    background-color: #B00020;
+}
+
+.note.hit {
+    opacity: 0.35;
+}
