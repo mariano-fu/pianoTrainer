@@ -203,7 +203,7 @@ function createBlock(note) {
     const block = document.createElement("div");
     block.classList.add("note");
     block.style.height = `${note.beats * PX_PER_BEAT}px`;
-    block.style.width = (`${key.offsetWidth}px`);
+    block.style.width = `${key.offsetWidth}px`;
     block.style.left = `${key.offsetLeft - lane.offsetLeft}px`;
     return block;
 }
@@ -217,6 +217,44 @@ function renderBlocks() {
     });
 }
 
+function draw() {
+    const hitY = lane.offsetHeight;
+    blocks.forEach((block, i) => {
+        const note = state.song.notes[i];
+        const bottom = hitY - (note.start - songBeat) * PX_PER_BEAT;
+        const top = bottom - note.beats * PX_PER_BEAT;
+        block.style.transform = `translateY(${top}px)`;
+    });
+}
+
+//runs once per repaint: advances songBeat by the time that passed 
+// holds it at the next note's start, then redraws and schedules the next frame
+function frame(now) {
+    if (lastTime !== null) {
+        const seconds = Math.min((now - lastTime) / 1000, 0.1);
+        songBeat += seconds * (state.song.bpm / 60);
+        const next = state.song.notes[nextIndex];
+        if (next && songBeat >= next.start) songBeat = next.start;
+    }
+    lastTime = now;
+    draw()
+    frameId = requestAnimationFrame(frame);
+}
+
+function stopLoop() {
+    cancelAnimationFrame(frameId);
+    frameId = null;
+}
+
+// stops any running loop, resets the song to its lead-in, and schedules the first frame
+function startLoop() {
+    stopLoop();
+    songBeat = -LEAD_IN_BEATS;
+    nextIndex = 0;
+    lastTime = null;
+    frameId = requestAnimationFrame(frame);
+}
+
 function startSong(song) {
     state.mode = "song";
     state.song = {...song, notes: withStartBeats(song.notes) };
@@ -224,12 +262,15 @@ function startSong(song) {
     document.querySelector("#lane").classList.remove("hidden");
     showScreen("in-game-screen");
     renderBlocks();
+    draw();
+    startLoop();
     
 }
 
 
 
 function startFreePlay() {
+    stopLoop();
     state.mode = "free";
     state.song = null;
     document.querySelector("#song-title").textContent = "Free Play";
@@ -240,6 +281,7 @@ function startFreePlay() {
 document.querySelector("#free-play").addEventListener("click", startFreePlay);
 
 function backToMenu() {
+    stopLoop();
     state.mode = "menu"
     state.song = null;
     showScreen("menu-screen");
