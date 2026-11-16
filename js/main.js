@@ -175,13 +175,59 @@ const state = {
     song: null, // current song
 };
 
-function startsong(song) {
+//height of one beat in pixels
+const PX_PER_BEAT = 120;
+
+// empty beats before the first note arrives
+const LEAD_IN_BEATS = 4;
+
+const lane = document.querySelector("#lane");
+
+// one div per note, same order as the notes
+let blocks= [];
+
+//how far the song has scrolled in beats
+let songBeat = 0;
+
+//the note the player must hit next 
+let nextIndex = 0;
+
+//timestamp of previous frame
+let lastTime = null;
+
+//id of pending frame, so it can be canceled
+let frameId = null;
+
+function createBlock(note) {
+    const key = findKey(note.pitch);
+    const block = document.createElement("div");
+    block.classList.add("note");
+    block.style.height = `${note.beats * PX_PER_BEAT}px`;
+    block.style.width = (`${key.offsetWidth}px`);
+    block.style.left = `${key.offsetLeft - lane.offsetLeft}px`;
+    return block;
+}
+
+function renderBlocks() {
+    lane.innerHTML = "";
+    blocks = state.song.notes.map((note) => {
+        const block = createBlock(note);
+        lane.appendChild(block);
+        return block;
+    });
+}
+
+function startSong(song) {
     state.mode = "song";
-    state.song = {...song, notes: withStartsBeats(song.notes) };
+    state.song = {...song, notes: withStartBeats(song.notes) };
     document.querySelector("#song-title").textContent = song.title;
     document.querySelector("#lane").classList.remove("hidden");
     showScreen("in-game-screen");
+    renderBlocks();
+    
 }
+
+
 
 function startFreePlay() {
     state.mode = "free";
@@ -204,3 +250,4 @@ document.querySelector("#back-to-menu-button-results").addEventListener("click",
 
 renderMenu();
 showScreen("menu-screen");
+
