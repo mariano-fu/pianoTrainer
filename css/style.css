@@ -125,7 +125,6 @@ main {
 
 .black {
     position: relative;
-    z-index: 10;
     width: var(--black-w);
     height: var(--black-h);
     margin-left: calc(var(--black-w) / -2);

@@ -78,6 +78,7 @@ function playTone(pitch) {
     osc.stop(audio.currentTime + 1);
 }
 
+
 //press and release
 function pressKey(pitch) {
     audio.resume();
