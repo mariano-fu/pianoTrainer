@@ -15,7 +15,7 @@ function labelFor(code) {
     return code.replace("Key", "");
 }
 
-// key map and createKey function
+// builds a white or black key with its pitch and letter 
 function createKey(code, pitch) {
     const key = document.createElement("button");
     key.type = "button";
@@ -35,16 +35,16 @@ function createKey(code, pitch) {
 
 // piano keys render from key map
 function renderKeyboard() {
-    const keyboard = document.querySelector('#keyboard')
-    const entries = Object.entries(KEY_TO_PITCH)
+    const keyboard = document.querySelector('#keyboard');
+    const entries = Object.entries(KEY_TO_PITCH);
     entries.forEach(([code, pitch]) => {
-        const key = createKey(code, pitch)
-        keyboard.append(key)
+        const key = createKey(code, pitch);
+        keyboard.append(key);
     });
 
 }
 
-renderKeyboard()
+renderKeyboard();
 
 
 // find a key from its pitch
@@ -81,9 +81,9 @@ function playTone(pitch) {
 //press and release
 function pressKey(pitch) {
     audio.resume();
-    playTone(pitch)
+    playTone(pitch);
     findKey(pitch).classList.add("pressed");
-    judgeKey(pitch)
+    judgeKey(pitch);
 }
 
 function releaseKey(pitch) {
@@ -106,7 +106,7 @@ document.addEventListener("keyup", (event) => {
 
 
 //mouse input
-const keyboard = document.querySelector("#keyboard")
+const keyboard = document.querySelector("#keyboard");
 let mousePitch = null;
 
 keyboard.addEventListener("mousedown", (event) => {
@@ -138,14 +138,14 @@ function showScreen(id) {
         if (screen.id === id) {
             screen.classList.remove("hidden");
         } else {
-            screen.classList.add("hidden")
+            screen.classList.add("hidden");
         }
     });
 }
 
 //builds one menu entry: a list item holding a button for the song
 function createSongItem(song) {
-    const item = document.createElement("li")
+    const item = document.createElement("li");
     const button = document.createElement("button");
     button.type = "button";
     button.dataset.songId = song.id;
@@ -168,7 +168,6 @@ document.querySelector("#song-list").addEventListener("click", (event) => {
     if (!songId) return;
     const song = SONGS.find((candidate) => candidate.id === songId);
     startSong(song);
-    updateHud();
 });
 
 // current game state
@@ -241,7 +240,7 @@ function frame(now) {
         if (next && songBeat >= next.start) songBeat = next.start;
     }
     lastTime = now;
-    draw()
+    draw();
     frameId = requestAnimationFrame(frame);
 }
 
@@ -280,7 +279,7 @@ function startFreePlay() {
     updateHud();
     document.querySelector("#song-title").textContent = "Free Play";
     document.querySelector("#lane").classList.add("hidden");
-    showScreen("in-game-screen")
+    showScreen("in-game-screen");
 }
 
 document.querySelector("#free-play").addEventListener("click", startFreePlay);
@@ -332,12 +331,9 @@ function finishSong () {
     showScreen("results-screen");
 }
 
-
-
-
 function backToMenu() {
     stopLoop();
-    state.mode = "menu"
+    state.mode = "menu";
     state.song = null;
     showScreen("menu-screen");
 }
